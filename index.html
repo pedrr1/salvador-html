@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <title>Salvar HTML no GitHub</title>
+    <style>
+        body { font-family: Arial, sans-serif; max-width: 600px; margin: 40px auto; padding: 20px; background: #f4f4f9; }
+        textarea { width: 100%; height: 200px; font-family: monospace; padding: 10px; margin-bottom: 10px; box-sizing: border-box; }
+        button { background: #2ea44f; color: white; border: none; padding: 10px 20px; font-size: 16px; cursor: pointer; border-radius: 6px; width: 100%; }
+        button:hover { background: #2c974b; }
+        #status { margin-top: 15px; font-weight: bold; text-align: center; }
+    </style>
+</head>
+<body>
+
+    <h2>Salvar HTML no Repositório Privado</h2>
+    
+    <label>Cole seu código HTML aqui:</label>
+    <textarea id="htmlCode" placeholder="<!DOCTYPE html>..."></textarea>
+
+    <button onclick="salvarNoGitHub()">Enviar para o GitHub</button>
+
+    <div id="status"></div>
+
+<script>
+async function salvarNoGitHub() {
+    // Insira seu token inteiro aqui entre aspas
+    const token = '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';
+    const codigo = document.getElementById('htmlCode').value;
+    const statusDiv = document.getElementById('status');
+
+    // Insira seu usuário e o nome do repositório privado aqui
+    const owner = 'pedrr1';
+    const repo = 'sollo';
+
+    if (!codigo) {
+        statusDiv.style.color = 'red';
+        statusDiv.innerText = 'Cole o código HTML antes de enviar!';
+        return;
+    }
+
+    statusDiv.style.color = 'blue';
+    statusDiv.innerText = 'Verificando próximo arquivo...';
+
+    const headers = {
+        'Authorization': `token ${token}`,
+        'Accept': 'application/vnd.github.v3+json'
+    };
+
+    try {
+        const responseList = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/`, { headers });
+        let proximoNumero = 1;
+
+        if (responseList.ok) {
+            const files = await responseList.json();
+            const numeros = files
+                .map(file => parseInt(file.name.replace('.html', ''), 10))
+                .filter(num => !isNaN(num));
+
+            if (numeros.length > 0) {
+                proximoNumero = Math.max(...numeros) + 1;
+            }
+        }
+
+        const nomeArquivo = String(proximoNumero).padStart(2, '0') + '.html';
+        statusDiv.innerText = `Salvando como ${nomeArquivo}...`;
+
+        const contentEncoded = btoa(unescape(encodeURIComponent(codigo)));
+        
+        const responseCreate = await fetch(`https://api.github.com/repos/${owner}/${repo}/contents/${nomeArquivo}`, {
+            method: 'PUT',
+            headers: headers,
+            body: JSON.stringify({
+                message: `Adicionando ${nomeArquivo} via página web`,
+                content: contentEncoded
+            })
+        });
+
+        if (responseCreate.ok) {
+            statusDiv.style.color = 'green';
+            statusDiv.innerText = `Sucesso! Arquivo ${nomeArquivo} criado no repositório.`;
+            document.getElementById('htmlCode').value = '';
+        } else {
+            const errorData = await responseCreate.json();
+            throw new Error(errorData.message || 'Erro ao criar o arquivo');
+        }
+
+    } catch (error) {
+        statusDiv.style.color = 'red';
+        statusDiv.innerText = `Erro: ${error.message}`;
+    }
+}
+</script>
+
+</body>
+</html>
