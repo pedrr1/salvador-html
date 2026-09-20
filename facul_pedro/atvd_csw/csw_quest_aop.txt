@@ -1,0 +1,20 @@
+Rascunho de Respostas Questionário AOP1-CSW
+
+Resposta: A internet tem suas origens na Guerra Fria, onde ambas as potências, Estados Unidos e União Soviética, sabiam da importância do investimentos nos meios de comunicação. O pentágono então tomou a iniciativa da criação de rede de informações nos anos de 1960, para manter suas informações caso o pentágono fosse atingido.
+
+Resposta: A ARPANET, foi a primeira rede criada pela DARPA, ela era usada para o compartilhamento de informações entre cientistas e acadêmicos de localidades diferentes.
+
+Resposta: A primeira mensagem enviada é e, 29 de outubro de 1969, com o assunto referente a Login enviado de UNCLA pelo professor Leonard Kleinrock. Após isso alguns outros computadores foram adicionados na rede, com o crescimento a rede foi deparada em duas, MILNET, para uso militar e Nova ARPANET para localidades não militares.
+
+Resposta: O protocolo das primeiras redes como ARPANET foi o NCP, ele funcionava por chaveamento de pacotes, separação a informação em diversos pacotes, salvava o endereço do destinatário e numero do pacote e depois disso o remontava para fazer toda a mensagem completa.
+
+Resposta: 7 de junho: Aprovação da implantação de um Backbone para a RNP, 1992/1993, Implantação de uma espinha dorsal de comunicação, cobrindo a maior parte do país
+
+Resposta: É um registro que relaciona o ip a um domínio (url) em especifico, para facilitar a comunicação entre usuário e aplicação web, sem precisar decorar o ip da aplicação que deseja utilizar
+
+Resposta: O computador do usuário (host) pesquisa por um domínio em especifico no navegador, o domínio é passado para o registro do dns que esta o ip desse domínio, através desse ip, é feita uma requisição da pagina da aplicação que deseja (pagina html), o computador do ip recebe essa requisição e envia como resposta a pagina html para o usuário de volta.
+
+Resposta: Ele foi o responsável pela criação do arquivo html, com linguagem de hiper texto e seu protocolo de comunicação http, permitindo uma criação de pagina mais dinâmica e intuitiva na web
+
+Resposta:Os anos 2010 foram marcados pelo crescimento do uso da internet móvel e do cloud
+computing. Os smartphones se tornaram o principal meio de acesso à internet para muitas pessoas. Ao mesmo tempo, empresas e indivíduos começaram a usar cada vez mais a "nuvem" para armazenar dados e rodar aplicações, isso foi chamado de Era  Mobile e Cloud Computing
