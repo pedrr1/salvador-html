@@ -91,12 +91,14 @@
 
     <div class="player-card">
         <h2 id="track-title">Música 1</h2>
-        <div class="artist">Artista Local</div>
+        <div class="artist" id="artist-name">Artista da Música 1</div>
 
-        <!-- Insira os nomes dos seus 3 arquivos de música abaixo nos atributos src -->
-        <audio id="audio1" src="musica1.mp3"></audio>
-        <audio id="audio2" src="musica2.mp3"></audio>
-        <audio id="audio3" src="musica3.mp3"></audio>
+        <!-- Elementos de áudio para as 5 músicas (basta trocar o src para o arquivo real) -->
+        <audio id="audio0" src="musica1.mp3"></audio>
+        <audio id="audio1" src="musica2.mp3"></audio>
+        <audio id="audio2" src="musica3.mp3"></audio>
+        <audio id="audio3" src="musica4.mp3"></audio>
+        <audio id="audio4" src="musica5.mp3"></audio>
 
         <div class="controls">
             <button class="secondary" onclick="mudarMusica(-1)" title="Anterior">⏮</button>
@@ -109,26 +111,39 @@
             <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1" oninput="mudarVolume(this.value)">
         </div>
 
-        <div class="playlist-info" id="playlist-status">Faixa 1 de 3</div>
+        <div class="playlist-info" id="playlist-status">Faixa 1 de 5</div>
     </div>
 
     <script>
+        // Array com todos os elementos de áudio (do 0 ao 4, totalizando 5)
         const audios = [
+            document.getElementById('audio0'),
             document.getElementById('audio1'),
             document.getElementById('audio2'),
-            document.getElementById('audio3')
+            document.getElementById('audio3'),
+            document.getElementById('audio4')
         ];
         
-        const titulos = ["Música 1", "Música 2", "Música 3"];
+        // Informações das 5 músicas para exibição na tela
+        const playlist = [
+            { titulo: "Música 1", artista: "Artista da Música 1" },
+            { titulo: "Música 2", artista: "Artista da Música 2" },
+            { titulo: "Música 3", artista: "Artista da Música 3" },
+            { titulo: "Música 4", artista: "Artista da Música 4" },
+            { titulo: "Música 5", artista: "Artista da Música 5" }
+        ];
+
         let indiceAtual = 0;
 
         const playPauseBtn = document.getElementById('play-pause-btn');
         const trackTitle = document.getElementById('track-title');
+        const artistName = document.getElementById('artist-name');
         const playlistStatus = document.getElementById('playlist-status');
         const volumeSlider = document.getElementById('volume-slider');
 
         function atualizarInterface() {
-            trackTitle.innerText = titulos[indiceAtual];
+            trackTitle.innerText = playlist[indiceAtual].titulo;
+            artistName.innerText = playlist[indiceAtual].artista;
             playlistStatus.innerText = `Faixa ${indiceAtual + 1} de ${audios.length}`;
             playPauseBtn.innerText = audios[indiceAtual].paused ? "▶" : "⏸";
         }
@@ -136,7 +151,7 @@
         function togglePlayPause() {
             const audioAtual = audios[indiceAtual];
             if (audioAtual.paused) {
-                // Pausa todas as outras caso estejam tocando
+                // Pausa todas as outras músicas caso alguma estivesse tocando
                 audios.forEach((a, idx) => {
                     if (idx !== indiceAtual) {
                         a.pause();
@@ -151,13 +166,18 @@
         }
 
         function mudarMusica(direcao) {
+            // Pausa a música atual e reinicia o tempo dela
             audios[indiceAtual].pause();
             audios[indiceAtual].currentTime = 0;
 
+            // Altera o índice (avança ou volta)
             indiceAtual += direcao;
+            
+            // Faz o loop infinito (se passar da última, volta pra 1; se voltar antes da primeira, vai pra última)
             if (indiceAtual >= audios.length) indiceAtual = 0;
             if (indiceAtual < 0) indiceAtual = audios.length - 1;
 
+            // Toca a nova música selecionada
             audios[indiceAtual].play();
             atualizarInterface();
         }
@@ -168,28 +188,32 @@
             });
         }
 
-        // Detectar teclas de Atalho (Espaço para Pause/Play e M para Mudo)
+        // Sincroniza os eventos de play/pause e quando a música termina sozinha
+        audios.forEach((audio, idx) => {
+            audio.addEventListener('play', () => {
+                if (idx === indiceAtual) atualizarInterface();
+            });
+            audio.addEventListener('pause', () => {
+                if (idx === indiceAtual) atualizarInterface();
+            });
+            audio.addEventListener('ended', () => {
+                mudarMusica(1); // Passa para a próxima automaticamente ao acabar
+            });
+        });
+
+        // Atalhos de Teclado (Espaço para Play/Pause e M para Mudo)
         window.addEventListener('keydown', (e) => {
-            // Evita conflito com o espaço rolando a página para baixo
             if (e.code === 'Space') {
                 e.preventDefault();
                 togglePlayPause();
             }
             
-            // Tecla M para Mutar / Desmutar
             if (e.key.toLowerCase() === 'm') {
                 audios.forEach(audio => {
                     audio.muted = !audio.muted;
                 });
                 volumeSlider.value = audios[indiceAtual].muted ? 0 : audios[indiceAtual].volume;
             }
-        });
-
-        // Quando a música acaba sozinha, pula para a próxima
-        audios.forEach((audio, idx) => {
-            audio.addEventListener('ended', () => {
-                mudarMusica(1);
-            });
         });
     </script>
 </body>
