@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Instruções - Trabalho do Primeiro Semestre</title>
+    <style>
+        :root {
+            --primary: #2563eb;
+            --primary-dark: #1d4ed8;
+            --bg-color: #f8fafc;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #475569;
+            --border-color: #e2e8f0;
+            --accent: #f1f5f9;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            line-height: 1.6;
+            padding: 2rem 1rem;
+        }
+
+        .container {
+            max-width: 850px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 2.5rem;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+
+        h1 {
+            color: var(--primary);
+            font-size: 2rem;
+            margin-bottom: 1.5rem;
+            border-bottom: 3px solid var(--primary);
+            padding-bottom: 0.5rem;
+        }
+
+        h2 {
+            color: var(--text-main);
+            font-size: 1.4rem;
+            margin-top: 2rem;
+            margin-bottom: 1rem;
+            border-left: 4px solid var(--primary);
+            padding-left: 0.75rem;
+        }
+
+        h3 {
+            font-size: 1.1rem;
+            color: var(--text-muted);
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+
+        p, li {
+            color: var(--text-muted);
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+        }
+
+        ul {
+            margin-left: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .info-box {
+            background-color: var(--accent);
+            border-left: 4px solid var(--primary);
+            padding: 1rem 1.25rem;
+            border-radius: 0 8px 8px 0;
+            margin-bottom: 1.5rem;
+        }
+
+        .info-box p {
+            margin: 0;
+            color: var(--text-main);
+        }
+
+        .badge-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin: 1.5rem 0;
+        }
+
+        .badge-card {
+            background: var(--accent);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            text-align: center;
+        }
+
+        .badge-card strong {
+            display: block;
+            color: var(--primary);
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        .obs {
+            background-color: #fef3c7;
+            border-left: 4px solid #f59e0b;
+            padding: 1rem;
+            border-radius: 0 8px 8px 0;
+            margin: 1rem 0;
+            color: #92400e;
+        }
+
+        @media (max-width: 600px) {
+            .container {
+                padding: 1.5rem;
+            }
+            h1 {
+                font-size: 1.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Trabalho do Primeiro Semestre</h1>
+
+        <div class="badge-grid">
+            <div class="badge-card">
+                <strong>Objetivo Acadêmico</strong>
+                <span>Colocar em prática o conteúdo de desenvolvimento WEB (HTML e CSS).</span>
+            </div>
+            <div class="badge-card">
+                <strong>Valor</strong>
+                <span>Nota máxima de 2,0 pontos</span>
+            </div>
+            <div class="badge-card">
+                <strong>Data de Entrega</strong>
+                <span>Até 14/10/26</span>
+            </div>
+        </div>
+
+        <div class="info-box">
+            <p><strong>Como Entregar:</strong> O trabalho de Desenvolvimento de Software Web da UVV (Landpage) deve ser enviado preenchendo o formulário oficial e informando o link do GitHub.</p>
+        </div>
+
+        <h2>Requisitos do Trabalho</h2>
+        <p>Criar uma Landing Page para divulgar o conteúdo do aluno.</p>
+
+        <div class="info-box" style="background-color: #f0fdf4; border-left-color: #22c55e;">
+            <strong>O que é uma Landing Page?</strong>
+            <p style="margin-top: 0.5rem;">Uma Landing Page é uma página específica para conversão. Ela possui vários elementos voltados para transformar o visitante em Lead, como um copy atrativo, formulário, CTA, entre outros. São muito utilizadas nas campanhas de marketing digital e costumam ter boas taxas de conversão.<br>
+            <small>Autor: Sebrae - <a href="https://sebrae.com.br/sites/PortalSebrae/artigos/o-que-e-uma-landing-page,3e1e097399323810VgnVCM100000d701210aRCRD" target="_blank">Acessar Artigo Original</a></small></p>
+        </div>
+
+        <h3>Requisitos Principais:</h3>
+        <ul>
+            <li><strong>1) Dados da sua vida acadêmica:</strong> Onde estudou, quando estudou, cursos que já fez.</li>
+            <li><strong>2) Dados da sua vida profissional:</strong> Onde já trabalhou ou em que pretende trabalhar.</li>
+            <li><strong>3) Dados da sua vida pessoal:</strong> Hobbys, vídeos e músicas preferidas.</li>
+            <li><strong>4) Oferecer serviço de construção de site:</strong> Tipos de site que pode produzir (Restaurante, academia, livraria, cafeteria, escolinha de futebol, vôlei, etc).</li>
+            <li><strong>5) Valores para construção (páginas estáticas):</strong> Quanto custa um site com 1 a 2 páginas, 3 a 5 páginas, e mais de 5 páginas.</li>
+            <li><strong>6) Valores para páginas dinâmicas e avançadas.</strong></li>
+            <li><strong>7) Captura de dados do cliente:</strong> Formulário para receber demanda e envio de proposta.</li>
+        </ul>
+
+        <p><em>A landing page deve ter um menu com 4 opções que levam a páginas diferentes (ou seções), com links funcionais entre elas.</em></p>
+
+        <h2>Estrutura das Seções / Páginas</h2>
+        
+        <h3>1. Página Principal ou Home</h3>
+        <ul>
+            <li>Mínimo de uma foto sua, contando sua história.</li>
+            <li>Breve resumo da sua história e objetivos profissionais.</li>
+            <li>Resumo das suas habilidades pessoais.</li>
+            <li>Resumo de hobbys, esportes, música, vídeo, time de futebol, etc.</li>
+            <li>Breve resumo da sua vida acadêmica (fundamental, médio, faculdade e futuro).</li>
+            <li>Participação em eventos (palestras, feiras, trabalhos acadêmicos).</li>
+            <li>Matérias que está cursando na faculdade e resumo delas.</li>
+            <li>Planos para o futuro profissional.</li>
+        </ul>
+
+        <h3>2. Currículo</h3>
+        <ul>
+            <li>Currículo formal de trabalhos profissionais realizados ou inventados/capacitações.</li>
+        </ul>
+
+        <h3>3. GitHub</h3>
+        <ul>
+            <li>Imagem e link para seu GitHub demonstrando sua experiência.</li>
+        </ul>
+
+        <h3>4. Serviços</h3>
+        <ul>
+            <li>Serviços de desenvolvimento de HomePage.</li>
+            <li>Preços para páginas estáticas (HTML/CSS), dinâmicas e super avançadas (Utilizar tabela).</li>
+        </ul>
+
+        <h3>5. Contato</h3>
+        <ul>
+            <li>Formulário completo com nome completo, telefone, e-mail, tipo (física/jurídica), melhor horário de contato, tipo de serviço e descrição. Utilizar o máximo de tipos de campos (textbox, combobox, checkbox).</li>
+        </ul>
+
+        <div class="obs">
+            <strong>Critérios de Pontuação Extra:</strong> Tabelas, links ancorados, áudio, vídeo, CSS, links internos/externos e design responsivo (expansível de acordo com o dispositivo). O que está sendo avaliado não é o conteúdo em si, mas a habilidade de organizar e estruturar a página.
+        </div>
+
+        <h2>Como Entregar?</h2>
+        <p>Deverá ser respondido o questionário do Forms informando o link do GitHub com a landing page publicada.</p>
+    </div>
+
+</body>
+</html>
