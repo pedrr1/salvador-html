@@ -196,13 +196,13 @@
                 <span id="room-title">Chat Calopsita 🦜</span>
                 <button id="logout-btn" onclick="sair()">Trocar</button>
             </header>
-            
+
             <div id="chat-box"></div>
-            
+
             <div id="counter-bar">
                 Mensagens disponíveis (reset em 1 min): <span id="cooldown-count"><b>5</b></span>/5
             </div>
-            
+
             <footer>
                 <input type="text" id="msg-input" placeholder="Fiug-fiug! Digite aqui..." onkeypress="checarEnter(event)">
                 <button class="send-btn" id="send-btn" onclick="enviarMensagem()">➤</button>
@@ -211,7 +211,6 @@
     </div>
 
     <script>
-        // CONFIGURAÇÕES DO GITHUB (Atualizadas com base no seu repositório "salvador-html")
         const GITHUB_USER = "pedrr1";
         const GITHUB_REPO = "myqueen";
         const GITHUB_TOKEN = "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";
@@ -221,6 +220,19 @@
 
         const LIMITE_MAX = 5;
         const TEMPO_RESET_MS = 60000; // 1 minuto
+
+        // Funções auxiliares para codificar/decodificar UTF-8 corretamente no Base64 do GitHub
+        function encodeBase64UTF8(str) {
+            return btoa(encodeURIComponent(str).replace(/%([0-9A-F]{2})/g, function(match, p1) {
+                return String.fromCharCode('0x' + p1);
+            }));
+        }
+
+        function decodeBase64UTF8(base64) {
+            return decodeURIComponent(atob(base64).split('').map(function(c) {
+                return '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2);
+            }).join(''));
+        }
 
         function obterDadosEnvio() {
             const chave = `envios_${usuarioAtual}`;
@@ -250,7 +262,7 @@
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('chat-screen').style.display = 'flex';
             document.getElementById('room-title').innerText = `${nome === 'Pedro' ? '🐤' : '🕊️'} Logado como: ${nome}`;
-            
+
             atualizarIndicador();
             carregarMensagens();
             setInterval(carregarMensagens, 8000); 
@@ -278,11 +290,15 @@
         function renderizarChat() {
             const chatBox = document.getElementById('chat-box');
             chatBox.innerHTML = "";
-            
+
             mensagensCache.forEach(msg => {
                 const div = document.createElement('div');
-                div.classList.add('message', msg.usuario.toLowerCase());
-                div.innerHTML = `<span class="sender">${msg.usuario === 'Pedro' ? '🐤 Pedro' : '🕊️ Sophia'}</span>${msg.texto}`;
+                // Aplica a classe com base no usuário vindo do JSON (Pedro ou Sophia)
+                const userClass = msg.usuario ? msg.usuario.toLowerCase() : 'desconhecido';
+                div.classList.add('message', userClass);
+                
+                const nomeFormatado = msg.usuario === 'Pedro' ? '🐤 Pedro' : (msg.usuario === 'Sophia' ? '🕊️ Sophia' : msg.usuario);
+                div.innerHTML = `<span class="sender">${nomeFormatado}</span>${msg.texto}`;
                 chatBox.appendChild(div);
             });
             chatBox.scrollTop = chatBox.scrollHeight;
@@ -319,17 +335,18 @@
 
                 let conteudoAtual = [];
                 if (fileData.content) {
-                    // Decodifica o JSON vindo do banco de dados do GitHub
-                    conteudoAtual = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
+                    // Decodifica usando o conversor UTF-8 seguro para ler o JSON do GitHub
+                    const jsonString = decodeBase64UTF8(fileData.content);
+                    conteudoAtual = JSON.parse(jsonString);
                 }
 
-                // Cria um ID único para a mensagem (baseado em timestamp + número aleatório)
+                // Cria um ID único para a mensagem
                 const idMensagem = 'msg_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
 
-                // Insere a mensagem com ID no array do JSON
+                // Insere explicitamente identificando se é do Pedro ou da Sophia no JSON
                 conteudoAtual.push({
                     id: idMensagem,
-                    usuario: usuarioAtual,
+                    usuario: usuarioAtual, // "Pedro" ou "Sophia" gravado certinho no banco de dados
                     texto: texto,
                     data: new Date().toISOString()
                 });
@@ -339,8 +356,8 @@
                     conteudoAtual = conteudoAtual.slice(conteudoAtual.length - 50);
                 }
 
-                // Codifica novamente para enviar ao GitHub
-                const novoConteudoBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(conteudoAtual, null, 2))));
+                // Codifica de volta para Base64 de forma segura em UTF-8
+                const novoConteudoBase64 = encodeBase64UTF8(JSON.stringify(conteudoAtual, null, 2));
 
                 const updateRes = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/mensagens.json`, {
                     method: 'PUT',
@@ -349,7 +366,7 @@
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        message: `Add mensagem ID ${idMensagem} de ${usuarioAtual}`,
+                        message: `Add ${usuarioAtual} (${idMensagem})`,
                         content: novoConteudoBase64,
                         sha: sha
                     })
