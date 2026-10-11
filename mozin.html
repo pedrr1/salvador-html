@@ -115,13 +115,13 @@
             color: #333;
         }
         .message.pedro {
-            background: #fff9c4; /* Amarelinho Calopsita */
+            background: #fff9c4;
             border: 1px solid #fbc02d;
             align-self: flex-end;
             border-top-right-radius: 2px;
         }
         .message.sophia {
-            background: #eceff1; /* Cinza Calopsita */
+            background: #eceff1;
             border: 1px solid #cfd8dc;
             align-self: flex-start;
             border-top-left-radius: 2px;
@@ -211,17 +211,16 @@
     </div>
 
     <script>
-        // CONFIGURAÇÕES DO GITHUB
+        // CONFIGURAÇÕES DO GITHUB (Atualizadas com base no seu repositório "salvador-html")
         const GITHUB_USER = "pedrr1";
         const GITHUB_REPO = "myqueen";
-        const GITHUB_TOKEN = "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"; 
+        const GITHUB_TOKEN = "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";
 
         let usuarioAtual = "";
         let mensagensCache = [];
 
-        // Controle de limite individual salvo localmente no celular de cada um
         const LIMITE_MAX = 5;
-        const TEMPO_RESET_MS = 60000; // 1 minuto em milissegundos
+        const TEMPO_RESET_MS = 60000; // 1 minuto
 
         function obterDadosEnvio() {
             const chave = `envios_${usuarioAtual}`;
@@ -229,7 +228,6 @@
             if (!dados) return { contador: 0, inicioJanela: Date.now() };
 
             const parsed = JSON.parse(dados);
-            // Se já passou 1 minuto desde a primeira mensagem, reseta o contador
             if (Date.now() - parsed.inicioJanela >= TEMPO_RESET_MS) {
                 return { contador: 0, inicioJanela: Date.now() };
             }
@@ -255,8 +253,8 @@
             
             atualizarIndicador();
             carregarMensagens();
-            setInterval(carregarMensagens, 8000); // Atualiza chat a cada 8 segundos
-            setInterval(atualizarIndicador, 5000); // Verifica se o tempo de 1 min expirou
+            setInterval(carregarMensagens, 8000); 
+            setInterval(atualizarIndicador, 5000); 
         }
 
         function sair() {
@@ -303,17 +301,16 @@
 
             if (dadosEnvio.contador >= LIMITE_MAX) {
                 const tempoRestante = Math.ceil((TEMPO_RESET_MS - (Date.now() - dadosEnvio.inicioJanela)) / 1000);
-                alert(`Você atingiu o limite de 5 mensagens. Aguarde ${tempoRestante > 0 ? tempoRestante : 0} segundos para enviar novamente.`);
+                alert(`Você atingiu o limite de 5 mensagens. Aguarde ${tempoRestante > 0 ? tempoRestante : 0} segundos.`);
                 return;
             }
 
             input.value = "";
-            
-            // Incrementa apenas o contador do usuário atual
             dadosEnvio.contador++;
             salvarDadosEnvio(dadosEnvio);
 
             try {
+                // Pega o arquivo atual do GitHub incluindo o SHA mais recente
                 const fileRes = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/mensagens.json`, {
                     headers: { 'Authorization': `token ${GITHUB_TOKEN}` }
                 });
@@ -322,16 +319,27 @@
 
                 let conteudoAtual = [];
                 if (fileData.content) {
+                    // Decodifica o JSON vindo do banco de dados do GitHub
                     conteudoAtual = JSON.parse(decodeURIComponent(escape(atob(fileData.content))));
                 }
 
-                conteudoAtual.push({ usuario: usuarioAtual, texto: texto, data: new Date().toISOString() });
+                // Cria um ID único para a mensagem (baseado em timestamp + número aleatório)
+                const idMensagem = 'msg_' + Date.now() + '_' + Math.floor(Math.random() * 1000);
 
-                // Mantém apenas as últimas 50 mensagens
+                // Insere a mensagem com ID no array do JSON
+                conteudoAtual.push({
+                    id: idMensagem,
+                    usuario: usuarioAtual,
+                    texto: texto,
+                    data: new Date().toISOString()
+                });
+
+                // Mantém rigidamente apenas as últimas 50 mensagens (fila FIFO)
                 if (conteudoAtual.length > 50) {
                     conteudoAtual = conteudoAtual.slice(conteudoAtual.length - 50);
                 }
 
+                // Codifica novamente para enviar ao GitHub
                 const novoConteudoBase64 = btoa(unescape(encodeURIComponent(JSON.stringify(conteudoAtual, null, 2))));
 
                 const updateRes = await fetch(`https://api.github.com/repos/${GITHUB_USER}/${GITHUB_REPO}/contents/mensagens.json`, {
@@ -341,7 +349,7 @@
                         'Content-Type': 'application/json',
                     },
                     body: JSON.stringify({
-                        message: `Mensagem de ${usuarioAtual}`,
+                        message: `Add mensagem ID ${idMensagem} de ${usuarioAtual}`,
                         content: novoConteudoBase64,
                         sha: sha
                     })
